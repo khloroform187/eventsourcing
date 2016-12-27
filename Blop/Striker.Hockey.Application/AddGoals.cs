@@ -1,0 +1,24 @@
+﻿using System;
+using Striker.Hockey.Domain;
+
+namespace Striker.Hockey.Application
+{
+    public class AddGoals
+    {
+        private readonly IPlayerRepository _playerRepository;
+
+        public AddGoals(IPlayerRepository playerRepository)
+        {
+            _playerRepository = playerRepository;
+        }
+
+        public void Execute(Guid playerId, int numberOfGoals)
+        {
+            var player = _playerRepository.Find(playerId);
+
+            player.AddGoalsToStatistics(numberOfGoals);
+
+            _playerRepository.Save(player);
+        }
+    }
+}
