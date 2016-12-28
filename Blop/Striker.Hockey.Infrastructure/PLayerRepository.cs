@@ -48,10 +48,8 @@ namespace Striker.Hockey.Infrastructure
         {
             var streamName = StreamNameFor(player.Id);
 
-            //  var expectedVersion = GetExpectedVersion(player.Version);
-            //_eventStore.AppendEventsToStream(streamName, player.Changes, expectedVersion);
-
-            _eventStore.AppendEventsToStream(streamName, player.Changes, null);
+            var expectedVersion = GetExpectedVersion(player.InitialVersion);
+            _eventStore.AppendEventsToStream(streamName, player.Changes, expectedVersion);
         }
 
         private static string StreamNameFor(Guid id)

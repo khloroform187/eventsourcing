@@ -14,7 +14,7 @@ namespace Striker.Hockey.Domain
         public Player(PlayerSnapshot snapshot)
         {
             Version = snapshot.Version;
-            //InitialVersion = snapshot.Version;
+            InitialVersion = snapshot.Version;
             Name = new PlayerName(snapshot.FirstName, snapshot.LastName);
             _stats = new SeasonStatistics(snapshot.Goals, snapshot.Passes);
         }
@@ -26,7 +26,7 @@ namespace Striker.Hockey.Domain
             Causes(playerCreatedEvent);
         }
 
-        //public int InitialVersion { get; private set; }
+        public int InitialVersion { get; private set; }
 
         public PlayerName Name { get; private set; }
 
