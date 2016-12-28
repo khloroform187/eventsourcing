@@ -29,9 +29,9 @@ namespace Striker.Hockey.Infrastructure
 
             var player = snapshot != null ? new Player(snapshot) : new Player();
 
-            foreach (var @event in stream)
+            foreach (var domaineEvent in stream)
             {
-                player.Apply(@event);
+                player.Apply(domaineEvent);
             }
 
             return player;
@@ -48,8 +48,10 @@ namespace Striker.Hockey.Infrastructure
         {
             var streamName = StreamNameFor(player.Id);
 
-            var expectedVersion = GetExpectedVersion(player.InitialVersion);
-            _eventStore.AppendEventsToStream(streamName, player.Changes, expectedVersion);
+            //  var expectedVersion = GetExpectedVersion(player.Version);
+            //_eventStore.AppendEventsToStream(streamName, player.Changes, expectedVersion);
+
+            _eventStore.AppendEventsToStream(streamName, player.Changes, null);
         }
 
         private static string StreamNameFor(Guid id)

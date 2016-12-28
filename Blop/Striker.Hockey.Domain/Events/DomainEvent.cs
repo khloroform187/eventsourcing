@@ -4,9 +4,9 @@ namespace Striker.Hockey.Domain.Events
 {
     public abstract class DomainEvent
     {
-        protected DomainEvent(Guid aggregateId)
+        protected DomainEvent(Guid id)
         {
-            Id = aggregateId;
+            Id = id;
         }
 
         public Guid Id { get; private set; }

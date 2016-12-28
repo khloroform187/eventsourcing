@@ -4,7 +4,7 @@ namespace Striker.Hockey.Domain.Events
 {
     public class PassesAdded : DomainEvent
     {
-        public PassesAdded(Guid aggregateId, int passes) : base(aggregateId)
+        public PassesAdded(Guid id, int passes) : base(id)
         {
             Passes = passes;
         }

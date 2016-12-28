@@ -32,20 +32,28 @@ namespace Striker.Hockey.Infrastructure
         public void AppendEventsToStream(string streamName, IEnumerable<DomainEvent> domainEvents, int? expectedVersion)
         {
             var commitId = Guid.NewGuid();
+
             var eventsInStorageFormat = domainEvents.Select(e => MapToEventStoreStorageFormat(e, commitId, e.Id));
-            _esConn.AppendToStream(StreamName(streamName), expectedVersion ?? ExpectedVersion.Any, eventsInStorageFormat);
+            streamName = StreamName(streamName);
+
+            _esConn.AppendToStreamAsync(streamName, ExpectedVersion.Any, eventsInStorageFormat).Wait();
         }
 
         public IEnumerable<DomainEvent> GetStream(string streamName, int fromVersion, int toVersion)
         {
             // ES wants the number of events to retrieve not highest version
             var amount = toVersion - fromVersion + 1;
+
+            // nbedard: added this block to handle edge case of value switching to negative when adding one to int.max
+            if (amount < 0)
+            {
+                amount = 1;
+            }
             Console.WriteLine("Amount: " + amount);
-            var events = _esConn.ReadStreamEventsForward(StreamName(streamName), fromVersion, amount, false);
-            // last param not important here
+            var events = _esConn.ReadStreamEventsForwardAsync(StreamName(streamName), fromVersion, amount, false);
 
             // map events back from JSON string to DomainEvent. Header indicates the type
-            return events.Events.Select(e => (DomainEvent) RebuildEvent(e));
+            return events.Result.Events.Select(e => (DomainEvent) RebuildEvent(e));
         }
 
         // snapshots in Event Store are just events in dedicated snapshot streams
@@ -54,17 +62,17 @@ namespace Striker.Hockey.Infrastructure
         {
             var stream = SnapshotStreamNameFor(streamName);
             var snapshotAsEvent = MapToEventStoreStorageFormat(snapshot, Guid.NewGuid(), Guid.NewGuid());
-            _esConn.AppendToStream(stream, ExpectedVersion.Any, snapshotAsEvent);
+            _esConn.AppendToStreamAsync(stream, ExpectedVersion.Any, snapshotAsEvent).Wait();
         }
 
         public T GetLatestSnapshot<T>(string streamName) where T : class
         {
             var stream = SnapshotStreamNameFor(streamName);
             var amountToFetch = 1; // just the latest one
-            var ev = _esConn.ReadStreamEventsBackward(stream, StreamPosition.End, amountToFetch, false);
+            var ev = _esConn.ReadStreamEventsBackwardAsync(stream, StreamPosition.End, amountToFetch, false);
 
-            if (ev.Events.Any())
-                return (T) RebuildEvent(ev.Events.Single());
+            if (ev.Result.Events.Any())
+                return (T) RebuildEvent(ev.Result.Events.Single());
             return null;
         }
 
@@ -83,7 +91,7 @@ namespace Striker.Hockey.Infrastructure
             var metadata = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(headers));
             const bool isJson = true;
 
-            return new EventData(eventId, evnt.GetType().Name, isJson, data, metadata);
+            return new EventData(Guid.NewGuid(), evnt.GetType().Name, isJson, data, metadata);
         }
 
         private object RebuildEvent(ResolvedEvent eventStoreEvent)
@@ -107,7 +115,9 @@ namespace Striker.Hockey.Infrastructure
             // Get Event Store projections require only a single hypen ("-")
             // see: https://groups.google.com/forum/#!msg/event-store/D477bKLcdI8/62iFGhHdMMIJ
             var sp = streamName.Split(new[] {'-'}, 2);
-            return sp[0] + "-" + sp[1].Replace("-", "");
+            var result = sp[0] + "-" + sp[1].Replace("-", "");
+
+            return result;
         }
     }
 }

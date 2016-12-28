@@ -14,7 +14,7 @@ namespace Striker.Hockey.Domain
         public Player(PlayerSnapshot snapshot)
         {
             Version = snapshot.Version;
-            InitialVersion = snapshot.Version;
+            //InitialVersion = snapshot.Version;
             Name = new PlayerName(snapshot.FirstName, snapshot.LastName);
             _stats = new SeasonStatistics(snapshot.Goals, snapshot.Passes);
         }
@@ -26,7 +26,7 @@ namespace Striker.Hockey.Domain
             Causes(playerCreatedEvent);
         }
 
-        public int InitialVersion { get; private set; }
+        //public int InitialVersion { get; private set; }
 
         public PlayerName Name { get; private set; }
 
@@ -53,7 +53,7 @@ namespace Striker.Hockey.Domain
         public override void Apply(DomainEvent changes)
         {
             When((dynamic) changes);
-            Version = Version ++;
+            Version = Version + 1;
         }
 
         public PlayerSnapshot GetPlayerSnaphot()
@@ -80,6 +80,7 @@ namespace Striker.Hockey.Domain
         {
             Id = playerCreatedEvent.Id;
             Name = playerCreatedEvent.Name;
+            this._stats = new SeasonStatistics();
         }
 
         private void When(GoalsAdded goalsAddedEvent)

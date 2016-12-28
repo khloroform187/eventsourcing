@@ -30,8 +30,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EventStore.ClientAPI, Version=3.9.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EventStore.Client.3.9.4\lib\net40\EventStore.ClientAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Management.Automation.6.1.7601.17515\lib\net45\System.Management.Automation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,7 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddGoals.cs" />
+    <Compile Include="BusinessUseCases\AddGoals.cs" />
+    <Compile Include="BusinessUseCases\FindPlayer.cs" />
+    <Compile Include="Cmdlets\AddGoals.cs" />
+    <Compile Include="Cmdlets\CreatePlayer.cs" />
+    <Compile Include="BusinessUseCases\CreatePlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +65,13 @@
       <Project>{B55E7950-95C8-490F-BD90-9C7A49C1558D}</Project>
       <Name>Striker.Hockey.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Striker.Hockey.Infrastructure\Striker.Hockey.Infrastructure.csproj">
+      <Project>{78adaff1-1de8-4b8b-9e1c-b3ee3df84c5f}</Project>
+      <Name>Striker.Hockey.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

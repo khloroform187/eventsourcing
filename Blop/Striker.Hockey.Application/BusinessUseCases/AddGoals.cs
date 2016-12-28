@@ -1,7 +1,7 @@
 ﻿using System;
 using Striker.Hockey.Domain;
 
-namespace Striker.Hockey.Application
+namespace Striker.Hockey.Application.BusinessUseCases
 {
     public class AddGoals
     {
@@ -16,6 +16,13 @@ namespace Striker.Hockey.Application
         {
             var player = _playerRepository.Find(playerId);
 
+            player.AddGoalsToStatistics(numberOfGoals);
+
+            _playerRepository.Save(player);
+        }
+
+        public void Execute(Player player, int numberOfGoals)
+        {
             player.AddGoalsToStatistics(numberOfGoals);
 
             _playerRepository.Save(player);
