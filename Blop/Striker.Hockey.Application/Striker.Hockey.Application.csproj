@@ -54,10 +54,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessUseCases\AddGoals.cs" />
-    <Compile Include="BusinessUseCases\FindPlayer.cs" />
+    <Compile Include="BusinessUseCases\AddPasses.cs" />
+    <Compile Include="BusinessUseCases\GetStats.cs" />
+    <Compile Include="BusinessUseCases\Stats.cs" />
+    <Compile Include="Cmdlets\AddBatchStats.cs" />
+    <Compile Include="Cmdlets\AddPasses.cs" />
     <Compile Include="Cmdlets\AddGoals.cs" />
     <Compile Include="Cmdlets\CreatePlayer.cs" />
     <Compile Include="BusinessUseCases\CreatePlayer.cs" />
+    <Compile Include="Cmdlets\GetStats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -20,12 +20,5 @@ namespace Striker.Hockey.Application.BusinessUseCases
 
             _playerRepository.Save(player);
         }
-
-        public void Execute(Player player, int numberOfGoals)
-        {
-            player.AddGoalsToStatistics(numberOfGoals);
-
-            _playerRepository.Save(player);
-        }
     }
 }

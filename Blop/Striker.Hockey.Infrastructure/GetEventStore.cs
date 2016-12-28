@@ -45,11 +45,12 @@ namespace Striker.Hockey.Infrastructure
             var amount = toVersion - fromVersion + 1;
 
             // nbedard: added this block to handle edge case of value switching to negative when adding one to int.max
-            if (amount < 0)
+            // nbedard: max of 4000 for the PoC. Should use paging when amount > 4000
+            if (amount < 0 || amount > 4000)
             {
-                amount = 1;
+                amount = 4000;
             }
-            Console.WriteLine("Amount: " + amount);
+
             var events = _esConn.ReadStreamEventsForwardAsync(StreamName(streamName), fromVersion, amount, false);
 
             // map events back from JSON string to DomainEvent. Header indicates the type

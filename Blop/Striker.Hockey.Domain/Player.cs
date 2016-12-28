@@ -90,7 +90,7 @@ namespace Striker.Hockey.Domain
                 _stats = new SeasonStatistics();
             }
 
-            _stats.AddGoals(goalsAddedEvent.Goals);
+            _stats = _stats.AddGoals(goalsAddedEvent.Goals);
         }
 
         private void When(PassesAdded passesAddedEvent)
@@ -100,7 +100,7 @@ namespace Striker.Hockey.Domain
                 _stats = new SeasonStatistics();
             }
 
-            _stats.AddPasses(passesAddedEvent.Passes);
+            _stats = _stats.AddPasses(passesAddedEvent.Passes);
         }
     }
 }
