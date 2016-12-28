@@ -22,7 +22,7 @@ namespace Striker.Hockey.Infrastructure
             var snapshot = _eventStore.GetLatestSnapshot<PlayerSnapshot>(streamName);
             if (snapshot != null)
             {
-                fromEventNumber = snapshot.Version + 1; // load only events after snapshot
+                fromEventNumber = snapshot.Version;
             }
 
             var stream = _eventStore.GetStream(streamName, fromEventNumber, toEventNumber);
@@ -50,6 +50,13 @@ namespace Striker.Hockey.Infrastructure
 
             var expectedVersion = GetExpectedVersion(player.InitialVersion);
             _eventStore.AppendEventsToStream(streamName, player.Changes, expectedVersion);
+        }
+
+        public void SaveSnapshot(PlayerSnapshot snapshot)
+        {
+            var streamName = StreamNameFor(snapshot.Id);
+
+            _eventStore.AddSnapshot<PlayerSnapshot>(streamName, snapshot);
         }
 
         private static string StreamNameFor(Guid id)

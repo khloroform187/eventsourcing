@@ -17,6 +17,7 @@ namespace Striker.Hockey.Domain
             InitialVersion = snapshot.Version;
             Name = new PlayerName(snapshot.FirstName, snapshot.LastName);
             _stats = new SeasonStatistics(snapshot.Goals, snapshot.Passes);
+            Id = snapshot.Id;
         }
 
         public Player(Guid id, PlayerName name)
@@ -64,7 +65,8 @@ namespace Striker.Hockey.Domain
                 FirstName = Name.FirstName,
                 LastName = Name.LastName,
                 Goals = Goals,
-                Passes = Passes
+                Passes = Passes,
+                Id = Id
             };
 
             return snapshot;
@@ -80,7 +82,7 @@ namespace Striker.Hockey.Domain
         {
             Id = playerCreatedEvent.Id;
             Name = playerCreatedEvent.Name;
-            this._stats = new SeasonStatistics();
+            _stats = new SeasonStatistics();
         }
 
         private void When(GoalsAdded goalsAddedEvent)

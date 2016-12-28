@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Striker.Hockey.Domain;
 
 namespace Striker.Hockey.Application.BusinessUseCases
@@ -14,7 +15,10 @@ namespace Striker.Hockey.Application.BusinessUseCases
 
         public Stats Execute(Guid playerId)
         {
+            var start = new Stopwatch();
+            start.Start();
             var player = _playerRepository.Find(playerId);
+            start.Stop();
 
             var stats = new Stats
             {
@@ -22,7 +26,8 @@ namespace Striker.Hockey.Application.BusinessUseCases
                 Passes = player.Passes,
                 Points = player.Points,
                 FirstName = player.Name.FirstName,
-                LastName = player.Name.LastName
+                LastName = player.Name.LastName,
+                TimeInMsToFetchData = start.ElapsedMilliseconds
             };
 
             return stats;

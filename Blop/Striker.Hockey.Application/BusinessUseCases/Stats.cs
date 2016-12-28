@@ -11,5 +11,7 @@
         public int Passes { get; set; }
 
         public int Points { get; set; }
+
+        public long TimeInMsToFetchData { get; set; }
     }
 }

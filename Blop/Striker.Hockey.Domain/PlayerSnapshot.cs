@@ -1,4 +1,6 @@
-﻿namespace Striker.Hockey.Domain
+﻿using System;
+
+namespace Striker.Hockey.Domain
 {
     public class PlayerSnapshot
     {
@@ -11,5 +13,7 @@
         public int Goals { get; set; }
 
         public int Passes { get; set; }
+
+        public Guid Id { get; set; }
     }
 }

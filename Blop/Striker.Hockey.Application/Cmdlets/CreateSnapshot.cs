@@ -6,8 +6,8 @@ using Striker.Hockey.Infrastructure;
 
 namespace Striker.Hockey.Application.Cmdlets
 {
-    [Cmdlet(VerbsCommon.Get, "Stats")]
-    public class GetStats : PSCmdlet
+    [Cmdlet(VerbsCommon.Add, "Snapshot")]
+    public class CreateSnapshot : PSCmdlet
     {
         [Parameter(Position = 0, Mandatory = true)]
         public Guid PlayerId { get; set; }
@@ -21,12 +21,9 @@ namespace Striker.Hockey.Application.Cmdlets
                 connection.ConnectAsync().Wait();
                 var eventStore = new GetEventStore(connection);
                 var repository = new PlayerRepository(eventStore);
-                var service = new BusinessUseCases.GetStats(repository);
+                var service = new BusinessUseCases.CreateSnapshot(repository);
 
-                var stats = service.Execute(PlayerId);
-
-                WriteObject(
-                    $"{stats.FirstName} {stats.LastName} has {stats.Goals} goals and {stats.Passes} passes, for {stats.Points} points. {stats.TimeInMsToFetchData} ms.");
+                service.Execute(PlayerId);
             }
         }
     }

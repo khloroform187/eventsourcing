@@ -33,7 +33,7 @@ namespace Striker.Hockey.Infrastructure
         {
             var commitId = Guid.NewGuid();
 
-            var eventsInStorageFormat = domainEvents.Select(e => MapToEventStoreStorageFormat(e, commitId, e.Id));
+            var eventsInStorageFormat = domainEvents.Select(e => MapToEventStoreStorageFormat(e, commitId));
             streamName = StreamName(streamName);
 
             _esConn.AppendToStreamAsync(streamName, ExpectedVersion.Any, eventsInStorageFormat).Wait();
@@ -62,7 +62,7 @@ namespace Striker.Hockey.Infrastructure
         public void AddSnapshot<T>(string streamName, T snapshot)
         {
             var stream = SnapshotStreamNameFor(streamName);
-            var snapshotAsEvent = MapToEventStoreStorageFormat(snapshot, Guid.NewGuid(), Guid.NewGuid());
+            var snapshotAsEvent = MapToEventStoreStorageFormat(snapshot, Guid.NewGuid());
             _esConn.AppendToStreamAsync(stream, ExpectedVersion.Any, snapshotAsEvent).Wait();
         }
 
@@ -77,7 +77,7 @@ namespace Striker.Hockey.Infrastructure
             return null;
         }
 
-        private EventData MapToEventStoreStorageFormat(object evnt, Guid commitId, Guid eventId)
+        private EventData MapToEventStoreStorageFormat(object evnt, Guid commitId)
         {
             var headers = new Dictionary<string, object>
             {

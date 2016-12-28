@@ -9,5 +9,7 @@ namespace Striker.Hockey.Domain
         void Add(Player player);
 
         void Save(Player player);
+
+        void SaveSnapshot(PlayerSnapshot snapshot);
     }
 }
